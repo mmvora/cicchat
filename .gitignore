@@ -1,0 +1,7 @@
+.venv
+__pycahce__
+.ruff_cache
+.env
+
+# Mac OS
+.DS_Store
