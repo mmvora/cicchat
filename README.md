@@ -6,7 +6,7 @@ This is a basic chatbot that is designed to let you speak to a provided set of d
 You will need the following prerequisites to run this project:
 - Python 3.10 or higher installed on your machine
 - For this project I used Llama as the model (run locally). I recommend installing it and running it via Ollama. 
-You can find the instructions [here](https://ollama.com/) and use the 'llama3.2' model.
+You can find the instructions [here](https://ollama.com/) and use the `llama3.2` model.
   - Once installed (assuming you are using a mac), you can run the following command to start the model:
   ```ollama run llama3.2```
   - Please verify that the model is running on port 11434 (you can check this by going to http://localhost:11434 and you should see the message "Ollama is running").
@@ -16,7 +16,7 @@ You can find the instructions [here](https://ollama.com/) and use the 'llama3.2'
 ## How to run the project
 - If you want to not make any changes and just run the chatbot, you can first install the requirements by running:
   ```pip install -r requirements.txt```
-- Then you can run the chatbot by running:
+- Then you can run the chatbot by running (in the root directory of the repo):
   ```streamlit run app.py```
 - This will open a new tab in your browser with the chatbot. You can start chatting with it by typing in the text box at the bottom of the screen.
   - (if you can't see it in the browser, you can try going to the following link: http://localhost:8501)
