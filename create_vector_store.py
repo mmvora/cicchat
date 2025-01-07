@@ -1,11 +1,16 @@
-from langchain_chroma import Chroma
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from config import load_db_url
 from langchain_community.document_loaders import PyPDFLoader, UnstructuredHTMLLoader
 from langchain.docstore.document import Document
-
-from langchain_ollama import OllamaEmbeddings
+from langchain_experimental.text_splitter import SemanticChunker
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 import os
 
+from config import load_google_api_key
+from crud.model import Base, Info
+
+load_google_api_key()
 all_docs: list[Document] = []
 
 # Map file extensions to document loaders and their arguments
@@ -15,9 +20,13 @@ LOADER_MAPPING = {
 }
 
 DATASOURCE_DIR = os.environ.get("DATASOURCE_DIR", "data_sources")
+embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
 
 
 def create_vector_store():
+    engine = create_engine(load_db_url())
+    Base.metadata.create_all(engine)
+
     for root, _, files in os.walk(DATASOURCE_DIR):
         for file in files:
             _, extension = os.path.splitext(file)
@@ -28,15 +37,19 @@ def create_vector_store():
                 data = loader.load()
                 all_docs.extend(data)
 
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-    all_splits = text_splitter.split_documents(all_docs)
-    persist_dir = "vector_store_dir"
-
-    vectorstore = Chroma.from_documents(
-        documents=all_splits,
-        embedding=OllamaEmbeddings(model="llama3.2"),
-        persist_directory=persist_dir,
+    text_splitter = SemanticChunker(
+        embeddings=embeddings, breakpoint_threshold_type="gradient"
     )
+    docs = text_splitter.create_documents([doc.page_content for doc in all_docs])
+    with Session(engine) as session:
+        for doc in docs:
+            embedding = GoogleGenerativeAIEmbeddings(
+                model="models/text-embedding-004"
+            ).embed_query(doc.page_content)
+            info = Info(text=doc.page_content, embedding=embedding)
+            session.add(info)
+        session.commit()
+        print("Vector store created successfully")
 
 
 if __name__ == "__main__":
