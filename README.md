@@ -5,13 +5,9 @@ This is a basic chatbot that is designed to let you speak to a provided set of d
 ## Prerequisites
 You will need the following prerequisites to run this project:
 - Python 3.10 or higher installed on your machine
-- For this project I used Llama as the model (run locally). I recommend installing it and running it via Ollama. 
-You can find the instructions [here](https://ollama.com/) and use the `llama3.2` model.
-  - Once installed (assuming you are using a mac), you can run the following command to start the model:
-  ```ollama run llama3.2```
-  - Please verify that the model is running on port 11434 (you can check this by going to http://localhost:11434 and you should see the message "Ollama is running").
-    If it is running on a different port, you will need to create a .env file (you can just duplicate the `.env.example` file and rename it to `.env`) in the root of the project and add/modify line:
-    ```OLLAMA_URL=http://localhost:<port>```
+- For this project I used Google's Gemini as the llm of choice (using the `gemini-1.5-flash` model)
+  - To run this project, you will need to obtain your own API key from Google's AI Platform and set it as an environment variable called `GOOGLE_API_KEY` - which can be downloaded [here](https://aistudio.google.com/app/apikey)
+- You will also need to setup a local database of your choice, one that is supported by SQLAlchemy. I used `postgresql` for this project. You can set your database URL as an environment variable called `DATABASE_URL`.Please make sure its following the format `postgresql://<username>:<password>@<host>:<port>/<database_name>`
 
 ## How to run the project
 - If you want to not make any changes and just run the chatbot, you can first install the requirements by running:
@@ -23,7 +19,7 @@ You can find the instructions [here](https://ollama.com/) and use the `llama3.2`
   - (if you can't see it in the browser, you can try going to the following link: http://localhost:8501)
 
 ## How to add more data sources
-- The simplest way to add more data sources is to add more documents to the `data_sources` folder, then delete the exisiting `vector_store_dir` folder and run the following command:
+- The simplest way to add more data sources is to add more documents to the `data_sources` folder, clear your database and run the `create_vector_store` script again.
     ```python -m create_vector_store``` in the root of the project.
 
 
@@ -31,24 +27,22 @@ Formatted using [ruff](https://docs.astral.sh/ruff/)
 
 
 # Approach
-The approach I took was to use the Llama model to generate embeddings for the documents in the data_sources folder. I then used these embeddings to find the most similar document to the user's query. It was a very simple approach but it worked well for the MVP, if I was to do it again I would probably use a more advanced model and use an SQL database to store the embeddings - this would allow for:
-1. A larger dataset
-2. We can add tool calls to A/B test various similarity metrics and querying strategies to fetch the most relevant documents
-3. We can add a feedback loop to improve the model over time
+- The approach I took was to use the Gemini model to generate embeddings for the documents in the data_sources folder. 
+- The magic lies in the chunking of the data source where instead of just splitting up the documents by number of characters, we use *Semantic Chunking* to split the documents into chunks that are semantically meaningful. This allows the model to generate embeddings that are more representative of the document as a whole, whilst ensuring that similar pieces of text are close together in the embedding space.
+  - We also use the breakpoint_threshold_type of "gradient" given alot of the data source is actually relating to the same topic, this allows us to effectively differentiate between the different pieces of knowledge.
+- I then used these embeddings to find the most similar documents to the user's query (in our case up to the 5 closest texts). We do this via a tool call that runs a cosine similarity between the user's query and the embeddings of the text chunks, returning the chunks to the LLM. 
 
 ## The prompt
 The prompt I used was:
 ```
-    Use the following pieces of context to answer the question at the end.
-    If you don't know the answer, don't try to make up an answer and just try to be helpful using the context provided.
+You are a chatbot dedicated to providing information about safety, training and anything else that the user asks.
+To answer the user's questions, you MUST use the tools provided to you.
 
-    Context: {context}
-    History: {history}
-    Question: {question}
-    Helpful Answer:
+If you aren't able to answer the user's question using the provided tool, you should let the user know that you don't have the information.
+
 ```
 
 We can obviously tailor the prompt to be more specific to the CIC documents, but I think this is a good starting point for general use cases and minimises hallucinations.
 
 ## The model
-I used llama3.2 as the model for this project. It was free, small (7B parameters) and easy to run locally. There are obviously more advanced models that could be used.
+I used `gemini-1.5-flash` as the model for this project. You can change to any other model that you have access to by changing the `MODEL_NAME` in the environment variables.

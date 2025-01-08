@@ -3,9 +3,11 @@ chromadb==0.5.23
 langchain==0.3.10
 langchain-community==0.3.10
 langchain-core==0.3.22
+langchain-google-genai==2.0.8
 langchain-text-splitters==0.3.2
 langchain-experimental==0.3.10
 ollama==0.4.4
 streamlit==1.40.2
+SQLAlchemy==2.0.36
 pgvector==0.3.6
 psycopg==3.2.3
