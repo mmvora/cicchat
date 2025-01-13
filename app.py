@@ -29,8 +29,8 @@ model = genai.GenerativeModel(
 )
 chat = model.start_chat(enable_automatic_function_calling=True)
 
-st.title("CIC Chatbot")
-st.text("This is a simple chatbot that uses the provided CIC data to answer questions.")
+st.title("RAG Chatbot")
+st.text("This is a simple chatbot that uses the provided data to answer questions.")
 
 
 user_quest = st.text_input("Ask a question:")

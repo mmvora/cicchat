@@ -1,6 +1,6 @@
-# CIC ChatBot MVP
+# RAG Chatbot
 ## Overview
-This is a basic chatbot that is designed to let you speak to a provided set of documents, in our case some CIC information. 
+This is a basic chatbot that is designed to let you speak to a provided set of documents of a similar topic or theme, in our case some PDFs and HTML pages. 
 
 ## Prerequisites
 You will need the following prerequisites to run this project:
@@ -35,14 +35,14 @@ Formatted using [ruff](https://docs.astral.sh/ruff/)
 ## The prompt
 The prompt I used was:
 ```
-You are a chatbot dedicated to providing information about safety, training and anything else that the user asks.
+You are a chatbot dedicated to providing information about anything that the user asks.
 To answer the user's questions, you MUST use the tools provided to you.
 
 If you aren't able to answer the user's question using the provided tool, you should let the user know that you don't have the information.
 
 ```
 
-We can obviously tailor the prompt to be more specific to the CIC documents, but I think this is a good starting point for general use cases and minimises hallucinations.
+We can obviously tailor the prompt to be more specific to your given topic, but I think this is a good starting point for general use cases and minimal hallucinations.
 
 ## The model
 I used `gemini-1.5-flash` as the model for this project. You can change to any other model that you have access to by changing the `MODEL_NAME` in the environment variables.
