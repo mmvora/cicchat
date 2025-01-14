@@ -25,7 +25,7 @@ embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
 
 def create_vector_store():
     engine = create_engine(load_db_url())
-    Base.metadata.create_all(engine)
+    Base.metadata.create_all(engine) #This line creates the schema (table) in the database
 
     for root, _, files in os.walk(DATASOURCE_DIR):
         for file in files:

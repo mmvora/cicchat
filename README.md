@@ -7,7 +7,7 @@ You will need the following prerequisites to run this project:
 - Python 3.10 or higher installed on your machine
 - For this project I used Google's Gemini as the llm of choice (using the `gemini-1.5-flash` model)
   - To run this project, you will need to obtain your own API key from Google's AI Platform and set it as an environment variable called `GOOGLE_API_KEY` - which can be downloaded [here](https://aistudio.google.com/app/apikey)
-- You will also need to setup a local database of your choice, one that is supported by SQLAlchemy. I used `postgresql` for this project. You can set your database URL as an environment variable called `DATABASE_URL`.Please make sure its following the format `postgresql://<username>:<password>@<host>:<port>/<database_name>`
+- You will also need to setup a local database of your choice, one that is supported by SQLAlchemy. I used `postgresql` for this project. You can set your database URL as an environment variable called `DATABASE_URL`.Please make sure its following the format `postgresql+psycopg://user:password@host:port/dbname[?key=value&key=value...]` eg. postgresql+psycopg://localhost/ragchat
 
 ## How to run the project
 - If you want to not make any changes and just run the chatbot, you can first install the requirements by running:
