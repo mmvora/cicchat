@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 
 from config import get_gemini_model
-from crud.tool import find_related_info
+from crud.tools import find_related_info
 from google.generativeai.types import content_types
 from collections.abc import Iterable
 
