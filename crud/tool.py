@@ -9,7 +9,7 @@ engine = create_engine(load_db_url())
 
 def find_related_info(query: str) -> dict:
     """
-    Find related training, safety and other information based on the query provided.
+    Find related information based on the query provided.
     Args:
         query (str): The query to find related information for.
     Returns:
