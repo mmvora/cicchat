@@ -12,16 +12,16 @@ You will need the following prerequisites to run this project:
 ## How to run the project
 1. If you want to not make any changes and just run the chatbot, you can first install the requirements by running:
   ```pip install -r requirements.txt``` (you may have to use `pip3` instead of `pip` depending on your setup).
-  - I recommend using a virtual environment to install the requirements. (see [here](https://docs.python.org/3/library/venv.html) for more information on how to set up a virtual environment).
+    - I recommend using a virtual environment to install the requirements. (see [here](https://docs.python.org/3/library/venv.html) for more information on how to set up a virtual environment).
 2. Duplicate the `.env.example` file and rename it to `.env` and fill in the required environment variables.
 3. Add your own documents in the `data_sources` folder, and delete the `sample.pdf` and `sample.html` files.
 4. You can then run the `create_vector_store` script to generate the embeddings for the documents in the `data_sources` folder by running:
   ```python -m create_vector_store``` in the root of the project.
-  - This will create a new table in your database called `info` and populate it with the embeddings for the documents in the `data_sources` folder.
+    - This will create a new table in your database called `info` and populate it with the embeddings for the documents in the `data_sources` folder.
 5. Then you can run the chatbot by running (in the root directory of the repo):
   ```streamlit run app.py```
 6. This will open a new tab in your browser with the chatbot. You can start chatting with it by typing in the text box at the bottom of the screen.
-  - (if you can't see it in the browser, you can try going to the following link: http://localhost:8501)
+    - (if you can't see it in the browser, you can try going to the following link: http://localhost:8501)
 
 ## How to add more data sources
 - The simplest way to add more data sources is to add more documents to the `data_sources` folder, clear your database and run the `create_vector_store` script again.
