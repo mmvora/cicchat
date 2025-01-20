@@ -24,3 +24,10 @@ def get_gemini_model() -> str:
     if environment_model is None:
         raise Exception("MODEL environment variable not set")
     return environment_model
+
+
+def get_datasource_dir() -> str:
+    datasource_dir = os.getenv("DATASOURCE_DIR", dotenv_config.get("DATASOURCE_DIR"))
+    if datasource_dir is None:
+        raise Exception("DATASOURCE_DIR environment variable not set")
+    return datasource_dir

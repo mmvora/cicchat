@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 import os
 
-from config import load_google_api_key
+from config import load_google_api_key, get_datasource_dir
 from crud.model import Base, Info
 
 load_google_api_key()
@@ -19,13 +19,15 @@ LOADER_MAPPING = {
     ".html": UnstructuredHTMLLoader,
 }
 
-DATASOURCE_DIR = os.environ.get("DATASOURCE_DIR", "data_sources")
+DATASOURCE_DIR = get_datasource_dir()
 embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
 
 
 def create_vector_store():
     engine = create_engine(load_db_url())
-    Base.metadata.create_all(engine) #This line creates the schema (table) in the database
+    Base.metadata.create_all(
+        engine
+    )  # This line creates the schema (table) in the database
 
     for root, _, files in os.walk(DATASOURCE_DIR):
         for file in files:
